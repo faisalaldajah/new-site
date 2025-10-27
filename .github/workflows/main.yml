@@ -1,7 +1,9 @@
-name: Run Newman Postman Tests
+name: Run Postman Tests
 
 on:
   push:
+    branches: [ main ]
+  pull_request:
     branches: [ main ]
   workflow_dispatch:
 
@@ -10,29 +12,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '18'
 
       - name: Install Newman
         run: npm install -g newman
 
-      - name: Run Newman tests
+      - name: Run Postman Collection
         run: |
           newman run Admin.postman_collection.json \
-            -e Admin.postman_environment.json \
-            --reporters cli,html,junit \
-            --reporter-html-export newman-report.html \
-            --reporter-junit-export newman-results.xml
+            --reporters cli,html \
+            --reporter-html-export newman-report.html
 
-      - name: Upload reports
+      - name: Upload Test Report
         uses: actions/upload-artifact@v4
         with:
-          name: newman-reports
-          path: |
-            newman-report.html
-            newman-results.xml
+          name: newman-report
+          path: newman-report.html
