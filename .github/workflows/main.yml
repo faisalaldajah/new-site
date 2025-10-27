@@ -1,37 +1,26 @@
-name: Run Postman Tests
+name: Check index.html Text
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  newman-tests:
+  check-text:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install Newman
-        run: npm install -g newman
-
-      - name: Run Postman Collection with Environment
+      - name: Check for specific text in index.html
         run: |
-          newman run Admin.postman_collection.json \
-            -e prod.postman_environment.json \
-            --reporters cli,html \
-            --reporter-html-export newman-report.html
+          TEXT_TO_FIND="Yazan Khaled" # غيّرها للنص اللي بدك تبحث عنه
+          FILE_PATH="index.html"
 
-      - name: Upload Test Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: newman-report
-          path: newman-report.html
+          if grep -q "$TEXT_TO_FIND" "$FILE_PATH"; then
+            echo "✅ النص '$TEXT_TO_FIND' موجود في $FILE_PATH"
+          else
+            echo "❌ النص '$TEXT_TO_FIND' مش موجود في $FILE_PATH"
+            exit 1
+          fi
