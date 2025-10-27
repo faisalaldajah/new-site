@@ -19,8 +19,8 @@ jobs:
           FILE_PATH="index.html"
 
           if grep -q "$TEXT_TO_FIND" "$FILE_PATH"; then
-            echo "✅ النص '$TEXT_TO_FIND' موجود في $FILE_PATH"
+            echo "✅ the text '$TEXT_TO_FIND' is exist in $FILE_PATH"
           else
-            echo "❌ النص '$TEXT_TO_FIND' مش موجود في $FILE_PATH"
+            echo "❌ the text '$TEXT_TO_FIND' is not exist in $FILE_PATH"
             exit 1
           fi
